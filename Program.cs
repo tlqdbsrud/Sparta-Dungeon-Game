@@ -1,4 +1,6 @@
-﻿namespace Assigments_01
+﻿using System.Collections.Generic;
+
+namespace Assigments_01
 {
     class Program
     {
@@ -246,6 +248,7 @@
 
             int i = 0;
             string e;
+
             foreach (var item in itemList)
             {
                 e = item.isEquip ? "[E]" : "[X]";
@@ -272,7 +275,10 @@
                     DisplayGameIntro();
                     break;
                 case 1:
-           
+
+                    itemList = itemList.OrderByDescending(x => x.Name.Length).ToList();
+                    InventoryArray1();
+
                     break;
                 case 2:
 
@@ -286,6 +292,7 @@
 
             }
         }
+
 
     }
 }
