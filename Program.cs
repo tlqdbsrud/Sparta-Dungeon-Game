@@ -15,6 +15,7 @@ namespace Assigments_01
 
         }
 
+        // ★ 게임 세팅
         static void GameDataSetting()
         {
             // 캐릭터 정보 세팅
@@ -28,7 +29,7 @@ namespace Assigments_01
         }
 
 
-        // 입력가능 여부 및 입력값 리턴
+        // ★ 입력가능 여부 및 입력값 리턴
         static int CheckValidInput(int min, int max)
         {
             while (true)
@@ -47,7 +48,7 @@ namespace Assigments_01
             }
         }
 
-        // 1. 시작 화면
+        // ★ 1. 시작 화면
         public static void DisplayGameIntro()
         {
             Console.Clear();
@@ -57,13 +58,13 @@ namespace Assigments_01
             Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("1. 상태 보기 \n2. 인벤토리");
+            Console.WriteLine("1. 상태 보기 \n2. 인벤토리 \n3. 상점");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
 
-            int input = CheckValidInput(1, 2);
+            int input = CheckValidInput(1, 3);
             switch (input)
             {
                 case 1:
@@ -72,11 +73,14 @@ namespace Assigments_01
                 case 2:
                     EquipManagment1(); // 인벤토리
                     break;
+                case 3:
+                    Store();
+                    break;
             }
 
         }
 
-        // 2. 플레이어 상태 보기
+        // ★ 2. 플레이어 상태 보기
         public static void PlayerState()
         {
             Console.Clear();
@@ -111,9 +115,9 @@ namespace Assigments_01
             }
         }
 
-        
 
-        // 3. 인벤토리
+
+        // ★ 3. 인벤토리
         static void EquipManagment1()
         {
             Console.Clear();
@@ -157,6 +161,7 @@ namespace Assigments_01
             }
         }
 
+        // ★ 장착 관리
         static void EquipManagment2() // 현재의 장착상태를 보여줌
         {
             Console.Clear();
@@ -234,7 +239,7 @@ namespace Assigments_01
             
         }
 
-        // 아이템 정렬
+        // ★ 아이템 정렬
         static void InventoryArray1() 
         {
             Console.Clear();
@@ -292,10 +297,24 @@ namespace Assigments_01
                     itemList = itemList.OrderByDescending(x => x.Stat == "방어력").ToList();
                     InventoryArray1();
                     break;
-
             }
         }
 
+        // ★ 상점
+        static void Store()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("상점");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine($" {player.Gold} G");
 
+            Console.WriteLine();
+            Console.WriteLine("[아이템 목록]");
+        }
+
+        static void 
     }
 }
