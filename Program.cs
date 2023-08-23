@@ -390,13 +390,36 @@ namespace Assigments_01
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
 
-            int input = Program.CheckValidInput(0, 0);
-            switch (input)
+             
+            int input = Program.CheckValidInput(0, storeitmes.Count);
+            if(input == 0)
             {
-                case 0: // 나가기
-                    Store();
-                    break;
+                Store(); // 상점
             }
+            else
+            {
+                StoreItems purchaseditem = storeitmes[input - 1];
+
+                if (storeitmes.Contains(purchaseditem)) // 항목이 포함되어 있는지 확인
+                {
+                    Console.WriteLine("이미 구매한 아이템입니다.");
+                }
+                // 플레이어 골드로 구매가 가능한지
+                else if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
+                {
+                    Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
+                    player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
+                    Console.WriteLine("아이템을 구매하였습니다.");
+                }
+                else // 구매 불가능(플레이어 돈 < 제품 돈)
+                {
+                    Console.WriteLine("골드가 부족합니다.");
+                }
+ 
+            }
+    
+            
+            
         }
         static void Sale()
         {
