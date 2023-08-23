@@ -28,11 +28,17 @@ namespace Assigments_01
             itemList.Add(new Item(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0));
 
             // 상점 아이템 정보 세팅
-            storeitmes.Add(new StoreItems("미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.", 0, 700));
-            storeitmes.Add(new StoreItems("용의 뿔 투구", "방어력", 2, "용의 뿔을 소재로 견고하게 만든 투구입니다.", 0, 200));
+            storeitmes.Add(new StoreItems(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 300, true));
+            storeitmes.Add(new StoreItems(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1, 200, true));
+            storeitmes.Add(new StoreItems(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1, 400, true));
+            storeitmes.Add(new StoreItems(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0, 300, true));
 
-            storeitmes.Add(new StoreItems("번개 가죽 장갑", "공격력", 4, "가볍고 신속한 움직임을 위한 손보호구로 민첩성을 높여주는 장갑입니다.", 1, 600));
-            storeitmes.Add(new StoreItems("불타는 도끼", "공격력", 8, "불꽃으로 베어내며 화염 공격을 가하는 도끼입니다.", 1, 1500));
+
+            storeitmes.Add(new StoreItems(false, "미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.", 0, 700, false));
+            storeitmes.Add(new StoreItems(false, "용의 뿔 투구", "방어력", 2, "용의 뿔을 소재로 견고하게 만든 투구입니다.", 0, 200, false));
+
+            storeitmes.Add(new StoreItems(false, "번개 가죽 장갑", "공격력", 4, "가볍고 신속한 움직임을 위한 손보호구로 민첩성을 높여주는 장갑입니다.", 1, 600, false));
+            storeitmes.Add(new StoreItems(false, "불타는 도끼", "공격력", 8, "불꽃으로 베어내며 화염 공격을 가하는 도끼입니다.", 1, 1500, false));
         }
 
 
@@ -400,26 +406,28 @@ namespace Assigments_01
             {
                 StoreItems purchaseditem = storeitmes[input - 1];
 
-                if (storeitmes.Contains(purchaseditem)) // 항목이 포함되어 있는지 확인
+                if(purchaseditem.isPurchaseCompleted == false)
                 {
-                    Console.WriteLine("이미 구매한 아이템입니다.");
+                    purchaseditem.isPurchaseCompleted = true;
+
+                    // 플레이어 골드로 구매가 가능한지
+                    if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
+                    {
+                        Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
+                        player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
+                    }
+                    else // 구매 불가능(플레이어 돈 < 제품 돈)
+                    {
+                        Console.WriteLine("골드가 부족합니다.");
+                    }
                 }
-                // 플레이어 골드로 구매가 가능한지
-                else if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
-                {
-                    Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
-                    player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
-                    Console.WriteLine("아이템을 구매하였습니다.");
-                }
-                else // 구매 불가능(플레이어 돈 < 제품 돈)
-                {
-                    Console.WriteLine("골드가 부족합니다.");
-                }
+                
  
             }
-    
-            
-            
+
+            Buy();
+
+
         }
         static void Sale()
         {
