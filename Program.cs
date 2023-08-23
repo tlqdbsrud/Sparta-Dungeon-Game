@@ -6,11 +6,11 @@ namespace Assigments_01
     {
         public static Character player;
         private static List<Item> itemList = new List<Item>();
+        private static List<StoreItems> storeitmes = new List<StoreItems>();
 
         static void Main(string[] args)
         {
             GameDataSetting();
-            
             DisplayGameIntro();
 
         }
@@ -26,6 +26,10 @@ namespace Assigments_01
             itemList.Add(new Item(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.",1));
             itemList.Add(new Item(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1));
             itemList.Add(new Item(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0));
+
+            // 상점 아이템 정보 세팅
+            storeitmes.Add(new StoreItems("미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.",0 ,500));
+
         }
 
 
@@ -303,19 +307,27 @@ namespace Assigments_01
         // ★ 상점
         static void Store()
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("상점");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
             Console.WriteLine();
             Console.WriteLine("[보유 골드]");
-            Console.WriteLine($" {player.Gold} G");
+            Console.WriteLine($"{player.Gold} G");
 
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             
+            int i = 0;
+ 
+            foreach (var item in storeitmes)
+            {
+               
+                i++; // 목록 앞 숫자
+                Console.WriteLine($"- {i} {item.Name,-10}|{item.Stat,-5} +{item.StatBonus,-4}|{item.Description,-30}");
 
-
+            }
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("1. 아이템 구매 \n2. 아이템 판매 \n0. 나가기");
@@ -327,18 +339,18 @@ namespace Assigments_01
             int input = Program.CheckValidInput(0, 2);
             switch (input)
             {
-                case 0:
-                    DisplayGameIntro();
+                case 0: // 나가기
+                    DisplayGameIntro(); 
                     break;
-                case 1:
-                    EquipManagment2();
+                case 1: 
+                    
                     break;
                 case 2:
-                    InventoryArray1();
+                    
                     break;
             }
         }
 
-        static void 
+       
     }
 }

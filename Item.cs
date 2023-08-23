@@ -16,7 +16,7 @@ namespace Assigments_01
         public bool isEquip;
         public int AtDf; // 방어력: 0, 공격력: 1
 
-        public Item(string name, string stat, int statBonus, string description, int atdf)
+        public Item(string name, string stat, int statBonus, string description, int atdf, int price)
         {
             Name = name;
             Stat = stat;
