@@ -313,6 +313,30 @@ namespace Assigments_01
 
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
+            
+
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("1. 아이템 구매 \n2. 아이템 판매 \n0. 나가기");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">> ");
+
+            int input = Program.CheckValidInput(0, 2);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    EquipManagment2();
+                    break;
+                case 2:
+                    InventoryArray1();
+                    break;
+            }
         }
 
         static void 
