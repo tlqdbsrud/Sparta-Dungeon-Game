@@ -18,22 +18,23 @@ namespace Assigments_01
         // ★ 게임 세팅
         static void GameDataSetting()
         {
-            // 캐릭터 정보 세팅
-            player = new Character("John", "전사", 1, 10, 5, 100, 1500); // 이름, 직업, 레벨, 공격력, 방어력, 생명력, 골드
+            // ◆ 캐릭터 정보 세팅
+            player = new Character("John", "전사", 1, 0, 5, 100, 1500); // 이름, 직업, 레벨, 공격력, 방어력, 생명력, 골드
 
-            // 아이템 정보 세팅
+            // ◆ 아이템 정보 세팅
             itemList.Add(new Item(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0));
             itemList.Add(new Item(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1));
             itemList.Add(new Item(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1));
             itemList.Add(new Item(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0));
 
-            // 상점 아이템 정보 세팅
+            // ◆ 상점 아이템 정보 세팅
+            // 기본 아이템
             storeitmes.Add(new StoreItems(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 300, true));
             storeitmes.Add(new StoreItems(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1, 200, true));
             storeitmes.Add(new StoreItems(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1, 400, true));
             storeitmes.Add(new StoreItems(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0, 300, true));
 
-
+            // 상점 아이템
             storeitmes.Add(new StoreItems(false, "미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.", 0, 700, false));
             storeitmes.Add(new StoreItems(false, "용의 뿔 투구", "방어력", 2, "용의 뿔을 소재로 견고하게 만든 투구입니다.", 0, 200, false));
 
@@ -329,11 +330,12 @@ namespace Assigments_01
             Console.WriteLine();
 
             int i = 0;
-
+            string c;
             foreach (var items in storeitmes)
             {
+                c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
-                Console.WriteLine($"- {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-30}|{items.Price} G");
+                Console.WriteLine($"- {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
             }
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -350,14 +352,14 @@ namespace Assigments_01
             switch (input)
             {
                 case 0: // 나가기
-                    Inventory();
+                    DisplayGameIntro(); // 시작 화면
                     break;
                 case 1:
-                    Buy();
+                    Buy(); // 아이템 구매
                     Store();
                     break;
                 case 2:
-                    Sale();
+                    Sale(); // 아이템 판매
                     Store();
                     break;
             }
@@ -379,11 +381,93 @@ namespace Assigments_01
             Console.WriteLine();
 
             int i = 0;
-
+            string c;
             foreach (var items in storeitmes)
             {
+                c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
-                Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-30}|{items.Price} G");
+                Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("0. 나가기");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+
+            while (true)
+            {
+                Console.WriteLine("원하시는 행동을 입력해주세요.");
+                Console.Write(">> ");
+                int input = Program.CheckValidInput(0, storeitmes.Count);
+                if (input == 0)
+                {
+                    Store(); // 상점
+                    break;
+                }
+                else
+                {
+                    StoreItems purchaseditem = storeitmes[input - 1];
+
+                    if (purchaseditem.isPurchaseCompleted == true) // 구매했나요? ->  예
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("이미 구매한 아이템입니다.");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else
+                    {
+                        // 플레이어 골드로 구매가 가능한지
+                        if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
+                        {
+                            player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
+                            purchaseditem.isPurchaseCompleted = true;
+                            Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"구매 완료되었습니다. 남은 골드는 {player.Gold}G입니다.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else // 구매 불가능(플레이어 돈 < 제품 돈)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("골드가 부족합니다.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        // 아이템 판매
+        static void Sale()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("상점 - 아이템 판매");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine($"{player.Gold} G");
+            Console.WriteLine();
+            Console.WriteLine("---------------------------------------[아이템 목록]----------------------------------------");
+            Console.WriteLine();
+
+            int i = 0;
+            string c;
+            foreach (var items in storeitmes)
+            {
+                if (items.isPurchaseCompleted)
+                {
+                    c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
+                    i++; // 목록 앞 숫자
+                    Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
+                }
+
             }
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -396,43 +480,43 @@ namespace Assigments_01
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
 
-             
+
             int input = Program.CheckValidInput(0, storeitmes.Count);
-            if(input == 0)
+            if (input == 0)
             {
                 Store(); // 상점
             }
-            else
+            else // 판매
             {
-                StoreItems purchaseditem = storeitmes[input - 1];
+                // 플레이어 골드 85% 증액
+                int SellingPrice = (int)(storeitmes[input - 1].Price * 0.85); 
+                player.Gold += SellingPrice; 
 
-                if(purchaseditem.isPurchaseCompleted == false)
+                
+                
+                if(storeitmes[input].isEquip) // 장착이 되어있다면
                 {
-                    purchaseditem.isPurchaseCompleted = true;
-
-                    // 플레이어 골드로 구매가 가능한지
-                    if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
+                    if(storeitmes[input].AtDf == 1)
                     {
-                        Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
-                        player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
+                        player.Atk -= storeitmes[input].StatBonus; // 플레이어 공격력을 아이템의 공격력 보너스만큼 감소시킴
                     }
-                    else // 구매 불가능(플레이어 돈 < 제품 돈)
+                    else if (storeitmes[input - 1].AtDf == 0) // 방어력을 올리는 아이템
                     {
-                        Console.WriteLine("골드가 부족합니다.");
+                        player.Def -= storeitmes[input].StatBonus; // 플레이어 방어력을 아이템의 방어력 보너스만큼 감소시킴
                     }
                 }
-                
- 
+
+                Program.itemList.RemoveAll(item => item.Name == storeitmes[input].Name); // 인벤토리 목록에서 판매한 아이템 삭제
+
+                storeitmes[input].isPurchaseCompleted = false; // 선택한 아이템 판매 후, 아이템 소지X
+                storeitmes[input].isEquip = false; // 장착 해제
+                Store();
             }
 
-            Buy();
-
 
         }
-        static void Sale()
-        {
 
-        }
     }
-
 }
+
+
