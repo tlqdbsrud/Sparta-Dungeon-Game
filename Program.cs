@@ -262,7 +262,7 @@ namespace Assigments_01
 
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("0. 나가기\n1. 이름\n2. 장착순\n3. 공격력\n4. 방어력");
+            Console.WriteLine("1. 이름\n2. 장착순\n3. 공격력\n4. 방어력 \n0. 나가기");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -271,23 +271,26 @@ namespace Assigments_01
             int input = Program.CheckValidInput(0, 4);
             switch (input)
             {
-                case 0:
+                case 0: // 나가기
                     DisplayGameIntro();
                     break;
-                case 1:
 
+                case 1: // 이름 정렬
                     itemList = itemList.OrderByDescending(x => x.Name.Length).ToList();
                     InventoryArray1();
-
                     break;
-                case 2:
 
+                case 2: // 장착순
+                    itemList = itemList.OrderByDescending(x => x.isEquip).ToList();
+                    InventoryArray1();
                     break;
-                case 3:
-
+                case 3: // 공격력
+                    itemList = itemList.OrderByDescending(x => x.Stat == "공격력").ToList();
+                    InventoryArray1();
                     break;
-                case 4:
-
+                case 4: // 방어력
+                    itemList = itemList.OrderByDescending(x => x.Stat == "방어력").ToList();
+                    InventoryArray1();
                     break;
 
             }
