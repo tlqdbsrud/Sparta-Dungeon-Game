@@ -7,7 +7,8 @@ namespace Assigments_01
     {
         public static Character player;
         private static List<Item> itemList = new List<Item>();
-        private static List<StoreItems> storeitmes = new List<StoreItems>();
+        private static List<StoreItems> storeList = new List<StoreItems>();
+
 
         static void Main(string[] args)
         {
@@ -30,17 +31,16 @@ namespace Assigments_01
 
             // ◆ 상점 아이템 정보 세팅
             // 기본 아이템
-            /*storeitmes.Add(new StoreItems(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 300, true));
-            storeitmes.Add(new StoreItems(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1, 200, true));
-            storeitmes.Add(new StoreItems(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1, 400, true));
-            storeitmes.Add(new StoreItems(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0, 300, true));*/
+            storeList.Add(new StoreItems(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 300, true));
+            storeList.Add(new StoreItems(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1, 200, true));
+            storeList.Add(new StoreItems(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1, 400, true));
+            storeList.Add(new StoreItems(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0, 300, true));
 
             // 상점 아이템
-            itemList.Add(new StoreItems(false, "미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.", 0, 700, false));
-            itemList.Add(new StoreItems(false, "용의 뿔 투구", "방어력", 2, "용의 뿔을 소재로 견고하게 만든 투구입니다.", 0, 200, false));
-
-            itemList.Add(new StoreItems(false, "번개 가죽 장갑", "공격력", 4, "가볍고 신속한 움직임을 위한 손보호구로 민첩성을 높여주는 장갑입니다.", 1, 600, false));
-            itemList.Add(new StoreItems(false, "불타는 도끼", "공격력", 8, "불꽃으로 베어내며 화염 공격을 가하는 도끼입니다.", 1, 1500, false));
+            storeList.Add(new StoreItems(false, "미스릴 방패", "방어력", 6, "가벼우면서도 튼튼한 미스릴로 만든 매우 높은 방어력을 제공하는 방패입니다.", 0, 700, false));
+            storeList.Add(new StoreItems(false, "용의 뿔 투구", "방어력", 2, "용의 뿔을 소재로 견고하게 만든 투구입니다.", 0, 200, false));
+            storeList.Add(new StoreItems(false, "번개 가죽 장갑", "공격력", 4, "가볍고 신속한 움직임을 위한 손보호구로 민첩성을 높여주는 장갑입니다.", 1, 600, false));
+            storeList.Add(new StoreItems(false, "불타는 도끼", "공격력", 8, "불꽃으로 베어내며 화염 공격을 가하는 도끼입니다.", 1, 1500, false));
         }
 
 
@@ -332,7 +332,7 @@ namespace Assigments_01
 
             int i = 0;
             string c;
-            foreach (var items in storeitmes)
+            foreach (var items in storeList)
             {
                 c = items.isMyItem ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
@@ -383,7 +383,7 @@ namespace Assigments_01
 
             int i = 0;
             string c;
-            foreach (var items in storeitmes)
+            foreach (var items in storeList)
             {
                 c = items.isMyItem ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
@@ -402,7 +402,7 @@ namespace Assigments_01
             {
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
                 Console.Write(">> ");
-                int input = Program.CheckValidInput(0, storeitmes.Count);
+                int input = Program.CheckValidInput(0, storeList.Count);
                 if (input == 0)
                 {
                     Store(); // 상점
@@ -410,7 +410,7 @@ namespace Assigments_01
                 }
                 else
                 {
-                    StoreItems purchaseditem = storeitmes[input - 1];
+                    StoreItems purchaseditem = (StoreItems)storeList[input - 1];
 
                     if (purchaseditem.isMyItem == true) // 구매했나요? ->  예
                     {
@@ -490,20 +490,21 @@ namespace Assigments_01
                 if (itemList[input - 1].isMyItem) // 내 아이템 O
                 {
                     itemList[input - 1].isMyItem = false; // 내 아이템 X
-                    itemList[input - 1].isEquip = false; // 장착 해제
                     
-                    if (itemList[input - 1].AtDf == 0) // 방어력 아이템
+                    
+                    if (itemList[input - 1].AtDf == 0 && itemList[input - 1].isEquip == true) // 방어력 아이템이고, 아이템 장착 시
                     {
                         player.Def -= itemList[input - 1].StatBonus; // 플레이어 방어력 감소
                     }
-                    else if (itemList[input - 1].AtDf == 1) // 공격력 아이템
+                    else if (itemList[input - 1].AtDf == 1 && itemList[input - 1].isEquip == true) // 공격력 아이템이고, 아이템 장착 시
                     {
                         player.Atk -= itemList[input - 1].StatBonus; // 플레이어 공격력 감소
                     }
+                    itemList[input - 1].isEquip = false; // 장착 해제
                     itemList.RemoveAt(input - 1);
 
                     // 아이템 85% 가격으로 판매 -> 플레이어 골드 증가 
-                    int SellingPrice = (int)(storeitmes[input - 1].Price * 0.85);
+                    int SellingPrice = (int)(storeList[input - 1].Price * 0.85);
                     player.Gold += SellingPrice;
                 }
             }
