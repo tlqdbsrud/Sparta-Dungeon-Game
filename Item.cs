@@ -16,6 +16,7 @@ namespace Assigments_01
         public bool isEquip;
         public int AtDf; // 방어력: 0, 공격력: 1
         public bool isMyItem;
+        private StoreItems purchaseditem;
 
         public Item( bool isequip, string name, string stat, int statBonus,  string description, int atdf, int price, bool ismyitem)
         {

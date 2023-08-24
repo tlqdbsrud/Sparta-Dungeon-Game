@@ -334,7 +334,8 @@ namespace Assigments_01
             string c;
             foreach (var items in storeList)
             {
-                c = items.isMyItem ? "구매완료" : $"{items.Price} G";
+                bool isInInventory = itemList.Any(item => item.Name == items.Name && item.Stat == items.Stat && item.StatBonus == items.StatBonus);
+                c = isInInventory ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
                 Console.WriteLine($"- {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
             }
@@ -385,7 +386,8 @@ namespace Assigments_01
             string c;
             foreach (var items in storeList)
             {
-                c = items.isMyItem ? "구매완료" : $"{items.Price} G";
+                bool isInInventory = itemList.Any(item => item.Name == items.Name && item.Stat == items.Stat && item.StatBonus == items.StatBonus);
+                c = isInInventory ?  "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
                 Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
             }
@@ -509,84 +511,6 @@ namespace Assigments_01
                 }
             }
         }
-
-
-        // 아이템 판매
-        /*   static void Sale()
-           {
-               Console.Clear();
-               Console.ForegroundColor = ConsoleColor.Yellow;
-               Console.WriteLine("상점 - 아이템 판매");
-               Console.ForegroundColor = ConsoleColor.White;
-               Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
-               Console.WriteLine();
-               Console.WriteLine("[보유 골드]");
-               Console.WriteLine($"{player.Gold} G");
-               Console.WriteLine();
-               Console.WriteLine("---------------------------------------[아이템 목록]----------------------------------------");
-               Console.WriteLine();
-
-               int i = 0;
-               string c;
-               foreach (var items in storeitmes)
-               {
-                   if (items.isPurchaseCompleted)
-                   {
-                       c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
-                       i++; // 목록 앞 숫자
-                       Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
-                   }
-
-               }
-               Console.WriteLine();
-               Console.WriteLine("--------------------------------------------------------------------------------------------");
-
-               Console.WriteLine();
-               Console.ForegroundColor = ConsoleColor.Red;
-               Console.WriteLine("0. 나가기");
-               Console.ForegroundColor = ConsoleColor.White;
-               Console.WriteLine();
-               Console.WriteLine("원하시는 행동을 입력해주세요.");
-               Console.Write(">> ");
-
-
-               int input = Program.CheckValidInput(0, storeitmes.Count);
-               if (input == 0)
-               {
-                   Store(); // 상점
-               }
-               else // 판매
-               {
-                   // 플레이어 골드 85% 증액
-                   int SellingPrice = (int)(storeitmes[input - 1].Price * 0.85); 
-                   player.Gold += SellingPrice; 
-
-
-
-                   if(storeitmes[input].isEquip) // 장착이 되어있다면
-                   {
-                       if(storeitmes[input].AtDf == 1)
-                       {
-                           player.Atk -= storeitmes[input].StatBonus; // 플레이어 공격력을 아이템의 공격력 보너스만큼 감소시킴
-                       }
-                       else if (storeitmes[input - 1].AtDf == 0) // 방어력을 올리는 아이템
-                       {
-                           player.Def -= storeitmes[input].StatBonus; // 플레이어 방어력을 아이템의 방어력 보너스만큼 감소시킴
-                       }
-                   }
-
-                   Program.itemList.RemoveAll(item => item.Name == storeitmes[input].Name); // 인벤토리 목록에서 판매한 아이템 삭제
-
-                   storeitmes[input].isPurchaseCompleted = false; // 선택한 아이템 판매 후, 아이템 소지X
-                   storeitmes[input].isEquip = false; // 장착 해제
-                   Store();
-               }
-
-
-           }*/
-
-
-
     }
 }
 
