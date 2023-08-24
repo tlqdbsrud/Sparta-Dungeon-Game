@@ -15,8 +15,9 @@ namespace Assigments_01
         public string Description; // 설명
         public bool isEquip;
         public int AtDf; // 방어력: 0, 공격력: 1
+        public bool isMyItem;
 
-        public Item( bool isequip, string name, string stat, int statBonus,  string description, int atdf)
+        public Item( bool isequip, string name, string stat, int statBonus,  string description, int atdf, int price, bool ismyitem)
         {
             isEquip = isequip;
             Name = name;
@@ -24,6 +25,9 @@ namespace Assigments_01
             StatBonus = statBonus;
             Description = description;
             AtDf = atdf;
+            Price = price;
+            isMyItem = ismyitem;
+            
         }
         
     }

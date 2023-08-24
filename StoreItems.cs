@@ -8,12 +8,9 @@ namespace Assigments_01
 {
     public class StoreItems : Item
     {
-        public int Price;
-        public bool isPurchaseCompleted;
-        public StoreItems(bool isequip, string name, string stat, int statBonus, string description, int atdf, int price, bool ispurchasecompleted) : base(isequip, name, stat, statBonus, description, atdf)
+        public StoreItems(bool isequip, string name, string stat, int statBonus, string description, int atdf, int price, bool ismyitem) : base(isequip, name, stat, statBonus, description, atdf, price, ismyitem)
         {
-            Price = price;
-            isPurchaseCompleted = ispurchasecompleted;
+           
         }
     }
 }

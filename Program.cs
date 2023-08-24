@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace Assigments_01
 {
@@ -22,10 +23,10 @@ namespace Assigments_01
             player = new Character("John", "전사", 1, 0, 5, 100, 1500); // 이름, 직업, 레벨, 공격력, 방어력, 생명력, 골드
 
             // ◆ 아이템 정보 세팅
-            itemList.Add(new Item(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0));
-            itemList.Add(new Item(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1));
-            itemList.Add(new Item(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1));
-            itemList.Add(new Item(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0));
+            itemList.Add(new Item(true, "무쇠갑옷", "방어력", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 300, true));
+            itemList.Add(new Item(false, "낡은 검", "공격력", 2, "쉽게 볼 수 있는 낡은 검 입니다.", 1, 200, true));
+            itemList.Add(new Item(false, "신성한 활", "공격력", 3, "신성한 힘을 담아 원거리에서 정확한 공격을 수행하는 활입니다.", 1, 400, true));
+            itemList.Add(new Item(false, "마력 방어 망토", "방어력", 4, "마법 방어에 특화되어 있어 저항력을 부여하는 망토입니다.", 0, 300, true));
 
             // ◆ 상점 아이템 정보 세팅
             // 기본 아이템
@@ -333,7 +334,7 @@ namespace Assigments_01
             string c;
             foreach (var items in storeitmes)
             {
-                c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
+                c = items.isMyItem ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
                 Console.WriteLine($"- {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
             }
@@ -384,7 +385,7 @@ namespace Assigments_01
             string c;
             foreach (var items in storeitmes)
             {
-                c = items.isPurchaseCompleted ? "구매완료" : $"{items.Price} G";
+                c = items.isMyItem ? "구매완료" : $"{items.Price} G";
                 i++; // 목록 앞 숫자
                 Console.WriteLine($"- {i} {items.Name,-10}|{items.Stat,-5} +{items.StatBonus,-4}|{items.Description,-35}|{c}");
             }
@@ -411,7 +412,7 @@ namespace Assigments_01
                 {
                     StoreItems purchaseditem = storeitmes[input - 1];
 
-                    if (purchaseditem.isPurchaseCompleted == true) // 구매했나요? ->  예
+                    if (purchaseditem.isMyItem == true) // 구매했나요? ->  예
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("이미 구매한 아이템입니다.");
@@ -423,7 +424,7 @@ namespace Assigments_01
                         if (player.Gold >= purchaseditem.Price) // 구매 가능(플레이어 돈 > 제품 돈)
                         {
                             player.Gold -= purchaseditem.Price; // 상점에서 아이템 구매 -> 플레이어 돈 차감
-                            purchaseditem.isPurchaseCompleted = true;
+                            purchaseditem.isMyItem = true;
                             Program.itemList.Add(purchaseditem); // 새로운 아이템을 플레이어의 itemList에 추가(구매한 상점 아이템 -> 인벤토리 리스트)
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"구매 완료되었습니다. 남은 골드는 {player.Gold}G입니다.");
@@ -456,12 +457,16 @@ namespace Assigments_01
             Console.WriteLine("---------------------------------------[아이템 목록]----------------------------------------");
             Console.WriteLine();
 
-            List<StoreItems> purchasableItems = storeitmes.FindAll(item => item.isPurchaseCompleted);
-
-            for (int i = 0; i < purchasableItems.Count; i++)
+            int i = 0;
+            string e;
+            string c;
+            foreach (var item in itemList)
             {
-                string c = purchasableItems[i].isPurchaseCompleted ? "구매완료" : $"{purchasableItems[i].Price} G";
-                Console.WriteLine($"- {i + 1} {purchasableItems[i].Name,-10}|{purchasableItems[i].Stat,-5} +{purchasableItems[i].StatBonus,-4}|{purchasableItems[i].Description,-35}|{c}");
+                e = item.isEquip ? "[E]" : "[X]";
+                c = item.isMyItem ? "구매완료" : $"{item.Price} G";
+                i++; // 목록 앞 숫자
+                Console.WriteLine($"- {i} {e} {item.Name,-10}|{item.Stat,-5} +{item.StatBonus,-4}|{item.Description,-30}");
+
             }
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------------------------");
@@ -474,7 +479,7 @@ namespace Assigments_01
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
 
-            int input = Program.CheckValidInput(0, purchasableItems.Count);
+            int input = Program.CheckValidInput(0, itemList.Count);
 
             if (input == 0)
             {
@@ -482,28 +487,21 @@ namespace Assigments_01
             }
             else
             {
-                StoreItems selectedStoreItem = purchasableItems[input - 1];
-
-                // 아이템 판매 후, 해당 아이템을 storeitmes 리스트에서 제거
-                if (selectedStoreItem.isEquip)
+                if (itemList[input - 1].isMyItem)
                 {
-                    if (selectedStoreItem.AtDf == 1)
+                    itemList[input - 1].isMyItem = false;
+                    itemList[input - 1].isEquip = false;
+                    
+                    if (itemList[input - 1].AtDf == 0)
                     {
-                        player.Atk -= selectedStoreItem.StatBonus; // 플레이어 공격력을 아이템의 공격력 보너스만큼 감소시킴
+                        player.Def -= itemList[input - 1].StatBonus;
                     }
-                    else if (selectedStoreItem.AtDf == 0) // 방어력을 올리는 아이템
+                    else if (itemList[input - 1].AtDf == 1)
                     {
-                        player.Def -= selectedStoreItem.StatBonus; // 플레이어 방어력을 아이템의 방어력 보너스만큼 감소시킴
+                        player.Atk -= itemList[input - 1].StatBonus;
                     }
+                    itemList.RemoveAt(input - 1);
                 }
-
-                player.Gold += (int)(selectedStoreItem.Price * 0.85); // 플레이어 골드 85% 증액
-
-                Program.itemList.RemoveAll(item => item.Name == selectedStoreItem.Name); // 인벤토리 목록에서 판매한 아이템 삭제
-                selectedStoreItem.isPurchaseCompleted = false; // 선택한 아이템 판매 후, 아이템 소지X
-                selectedStoreItem.isEquip = false; // 장착 해제
-
-                //Store(); // 상점
             }
         }
 
@@ -581,6 +579,8 @@ namespace Assigments_01
 
 
            }*/
+
+
 
     }
 }
